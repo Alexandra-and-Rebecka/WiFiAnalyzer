@@ -53,7 +53,7 @@ public class ActivityUtils {
         Settings settings = mainContext.getSettings();
         if (settings == null) {
             return;
-        }
+    }
         MainActivity mainActivity = mainContext.getMainActivity();
         Window window = mainActivity.getWindow();
         if (settings.isKeepScreenOn()) {

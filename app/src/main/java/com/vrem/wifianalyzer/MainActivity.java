@@ -19,6 +19,7 @@
 package com.vrem.wifianalyzer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
@@ -29,6 +30,7 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.vrem.util.ConfigurationUtils;
 import com.vrem.util.EnumUtils;
+import com.vrem.wifianalyzer.authentication.AuthenticationActivity;
 import com.vrem.wifianalyzer.navigation.NavigationMenu;
 import com.vrem.wifianalyzer.navigation.NavigationMenuControl;
 import com.vrem.wifianalyzer.navigation.NavigationMenuController;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationMenuCon
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         MainContext mainContext = MainContext.INSTANCE;
         mainContext.initialize(this, isLargeScreen());
 

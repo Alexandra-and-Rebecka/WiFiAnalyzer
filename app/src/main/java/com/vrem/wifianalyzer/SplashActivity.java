@@ -23,11 +23,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vrem.wifianalyzer.authentication.AuthenticationActivity;
+
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, AuthenticationActivity.class);
         startActivity(intent);
         finish();
     }
