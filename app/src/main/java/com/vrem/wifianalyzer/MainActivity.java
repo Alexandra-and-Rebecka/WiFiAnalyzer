@@ -19,7 +19,6 @@
 package com.vrem.wifianalyzer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
@@ -30,12 +29,13 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.vrem.util.ConfigurationUtils;
 import com.vrem.util.EnumUtils;
-import com.vrem.wifianalyzer.authentication.AuthenticationActivity;
 import com.vrem.wifianalyzer.navigation.NavigationMenu;
 import com.vrem.wifianalyzer.navigation.NavigationMenuControl;
 import com.vrem.wifianalyzer.navigation.NavigationMenuController;
 import com.vrem.wifianalyzer.navigation.options.OptionMenu;
 import com.vrem.wifianalyzer.permission.PermissionService;
+import com.vrem.wifianalyzer.sendData.DataClient;
+import com.vrem.wifianalyzer.sendData.SendDataWorker;
 import com.vrem.wifianalyzer.settings.Repository;
 import com.vrem.wifianalyzer.settings.Settings;
 import com.vrem.wifianalyzer.settings.SettingsFactory;
@@ -44,6 +44,7 @@ import com.vrem.wifianalyzer.wifi.band.WiFiBand;
 import com.vrem.wifianalyzer.wifi.band.WiFiChannel;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +52,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.work.Data;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
+import static com.vrem.wifianalyzer.wifi.filter.Filter.build;
 
 public class MainActivity extends AppCompatActivity implements NavigationMenuControl, OnSharedPreferenceChangeListener {
 
@@ -106,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements NavigationMenuCon
 
         permissionService = new PermissionService(this);
         permissionService.check();
+
+        System.out.println("PeriodicWorkRequest");
+        PeriodicWorkRequest sendDataWorkerRequest = new PeriodicWorkRequest.Builder(SendDataWorker.class, 15, TimeUnit.MINUTES).build();
+
+        System.out.println("PeriodicWorkRequest Queued");
+        WorkManager.getInstance(this).enqueue(sendDataWorkerRequest);
     }
 
     @Override

@@ -1,6 +1,12 @@
-package com.vrem.wifianalyzer.authentication;
+package com.vrem.wifianalyzer.sendData;
 
 import android.content.Context;
+
+import androidx.core.util.Pair;
+
+import com.vrem.wifianalyzer.settings.Settings;
+import com.vrem.wifianalyzer.wifi.band.WiFiBand;
+import com.vrem.wifianalyzer.wifi.band.WiFiChannel;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -22,13 +28,13 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 
-public class Client {
+public class DataClient {
 
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
 
-    public Client(String address, int port, String username, String password, Context context) {
+    public DataClient(String address, int port, String username, String password, Context context) {
         try {
 
             Security.addProvider(new BouncyCastleProvider());
@@ -59,45 +65,15 @@ public class Client {
             clientContext.init(keyMgrFact.getKeyManagers(), trustMgrFact.getTrustManagers(), null);
 
             SSLSocketFactory fact = clientContext.getSocketFactory();
-            socket = (SSLSocket) fact.createSocket(address, port) ;
+            socket = (SSLSocket) fact.createSocket(address, port);
             System.out.println("Connected");
 
             in = new DataInputStream(socket.getInputStream());
             InputStream inputStream = socket.getInputStream();
             out = new DataOutputStream(socket.getOutputStream());
 
-            //out.writeUTF("login");
-            out.writeUTF("register");
+            out.writeUTF("Sending Data");
 
-            /*byte[] buff = new byte[8000];
-            int bytesRead = (inputStream.read(buff));
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            bao.write(buff, 0, bytesRead);
-
-            byte[] data = bao.toByteArray();
-            writeFileOnInternalStorage(tspath, data);
-
-            System.out.println("Okay");
-            out.writeUTF("Trustore Received");
-
-            buff = new byte[8000];
-            bytesRead = (inputStream.read(buff));;
-            bao = new ByteArrayOutputStream();
-                bao.write(buff, 0, bytesRead);
-
-            data = bao.toByteArray();
-            writeFileOnInternalStorage(kspath, data);
-
-            System.out.println("Okay");
-            out.writeUTF("Keystore Received");
-
-            //String received = in.readUTF();
-            //System.out.println(received);
-
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("clientTP.keystore", Context.MODE_PRIVATE));
-            //outputStreamWriter.write(received);
-            //outputStreamWriter.close();
-*/
             out.writeUTF(username);
             out.writeUTF(password);
 
@@ -113,20 +89,5 @@ public class Client {
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-    public void writeFileOnInternalStorage(String path, byte[] data) throws IOException {
-        File file = new File(path);
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-
-        try{
-            FileOutputStream stream = new FileOutputStream(path);
-            stream.write(data);
-        } catch (FileNotFoundException e1)
-        {
-            e1.printStackTrace();
-        }
-
     }
 }

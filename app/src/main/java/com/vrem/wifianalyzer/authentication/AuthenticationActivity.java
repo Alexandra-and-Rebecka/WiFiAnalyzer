@@ -25,7 +25,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //new CreateClient(username.getText().toString(), password.getText().toString(), getApplicationContext()).execute();
+                new CreateClient(username.getText().toString(), password.getText().toString(), getApplicationContext()).execute();
                 Intent myIntent = new Intent(AuthenticationActivity.this, MainActivity.class);
                 AuthenticationActivity.this.startActivity(myIntent);
                 finish();
