@@ -17,6 +17,7 @@
  */
 
 apply plugin: "com.android.application"
+apply plugin: "maven"
 
 apply from: "jacoco.gradle"
 
@@ -42,10 +43,19 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'androidx.test.ext:junit:1.1.1'
     // Android Test Dependencies
+    implementation 'com.android.support:multidex:1.0.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'
+    implementation 'org.slf4j:slf4j-android:1.7.7'
     implementation files('libs/bcprov-jdk15on-164.jar')
+
+    // tor
+    def tor_ctl_version = "0.2"
+    def tor_wrapper_version = "0.0.3"
+    implementation "net.freehaven.tor.control:jtorctl:$tor_ctl_version" // controlling tor instance via its control port
+    implementation "com.msopentech.thali:universal:$tor_wrapper_version" // core library for the tor wrapper
+    implementation "com.msopentech.thali.toronionproxy.android:android:$tor_wrapper_version@aar"
 }
 
 android {
@@ -54,10 +64,11 @@ android {
 
     defaultConfig {
         applicationId "com.vrem.wifianalyzer"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode
         versionName
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

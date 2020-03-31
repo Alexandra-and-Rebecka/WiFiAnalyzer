@@ -23,14 +23,26 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.msopentech.thali.android.toronionproxy.AndroidOnionProxyManager;
+import com.msopentech.thali.toronionproxy.TorConfig;
+import com.msopentech.thali.toronionproxy.TorInstaller;
 import com.vrem.wifianalyzer.authentication.AuthenticationActivity;
+import com.vrem.wifianalyzer.tor.Tor;
+import com.vrem.wifianalyzer.tor.TorResourceInstaller;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.TimeoutException;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = new Intent(this, AuthenticationActivity.class);
-        startActivity(intent);
-        finish();
+        new Tor(getApplicationContext()).execute();
+
+        //Intent intent = new Intent(this, AuthenticationActivity.class);
+        //startActivity(intent);
+        //finish();
     }
 }
