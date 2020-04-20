@@ -6,11 +6,15 @@ import android.os.AsyncTask;
 import com.msopentech.thali.android.toronionproxy.AndroidOnionProxyManager;
 import com.msopentech.thali.toronionproxy.TorConfig;
 import com.msopentech.thali.toronionproxy.TorInstaller;
+import com.msopentech.thali.toronionproxy.Utilities;
 import com.vrem.wifianalyzer.R;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.concurrent.TimeoutException;
 
 public class Tor extends AsyncTask<Void, Void, Void> {
@@ -21,6 +25,7 @@ public class Tor extends AsyncTask<Void, Void, Void> {
     }
     @Override
     protected Void doInBackground(Void... voids) {
+
         try {
             // configuration files
             int STARTUP_TIMEOUT_SEC = 30;
@@ -77,10 +82,42 @@ public class Tor extends AsyncTask<Void, Void, Void> {
                 System.out.println("could not start TOR after $STARTUP_TRIES with ${STARTUP_TIMEOUT_SEC}s timeout");
             } else {
                 System.out.println("successfully started TOR");
+
+                int hiddenServicePort = 5050;
+                int localPort = 10462;
+
+
+                while (!onionProxyManager.isRunning())
+                    Thread.sleep(90);
+                System.out.println("Tor initialized on port " + onionProxyManager.getIPv4LocalHostSocksPort());
+
+                Socket socket =
+                        Utilities.socks4aSocketConnection("80.216.31.62", hiddenServicePort, "127.0.0.1", localPort );
+                System.out.println("Connected");
+                System.out.println(socket);
+
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+                out.writeUTF("Sending Data");
+
+                out.writeUTF("TEST");
+                out.writeUTF("TEST");
+
+                System.out.println(in.readUTF());
+                System.out.println(in.readUTF());
+
+                in.close();
+                out.close();
+                socket.close();
+
+                System.out.println("Connection Closed");
             }
         } catch (Exception e) {
             System.out.println(e);
         }
+
+
 
         //Intent intent = new Intent(this, AuthenticationActivity.class);
         //startActivity(intent);
