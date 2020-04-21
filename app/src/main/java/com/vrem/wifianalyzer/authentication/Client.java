@@ -7,6 +7,7 @@ import com.vrem.wifianalyzer.MainActivity;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -77,37 +78,48 @@ public class Client {
 
             this.result = in.readUTF();
             System.out.println(result);
+            if(!result.equals("Success")){
+
+                in.close();
+                out.close();
+                socket.close();
+
+                System.out.println("Connection Closed");
+                return;
+            }
             System.out.println(in.readUTF());
 
-            /*byte[] buff = new byte[8000];
-            int bytesRead = (inputStream.read(buff));
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            bao.write(buff, 0, bytesRead);
+            if(type.equals("register")) {
 
-            byte[] data = bao.toByteArray();
-            writeFileOnInternalStorage(tspath, data);
-
-            System.out.println("Okay");
-            out.writeUTF("Trustore Received");
-
-            buff = new byte[8000];
-            bytesRead = (inputStream.read(buff));;
-            bao = new ByteArrayOutputStream();
+                byte[] buff = new byte[8000];
+                int bytesRead = (inputStream.read(buff));
+                ByteArrayOutputStream bao = new ByteArrayOutputStream();
                 bao.write(buff, 0, bytesRead);
 
-            data = bao.toByteArray();
-            writeFileOnInternalStorage(kspath, data);
+                byte[] data = bao.toByteArray();
+                writeFileOnInternalStorage(tspath, data);
 
-            System.out.println("Okay");
-            out.writeUTF("Keystore Received");
+                System.out.println("Okay");
+                out.writeUTF("Trustore Received");
 
-            //String received = in.readUTF();
-            //System.out.println(received);
+                buff = new byte[8000];
+                bytesRead = (inputStream.read(buff));;
+                bao = new ByteArrayOutputStream();
+                    bao.write(buff, 0, bytesRead);
 
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("clientTP.keystore", Context.MODE_PRIVATE));
-            //outputStreamWriter.write(received);
-            //outputStreamWriter.close();
-*/
+                data = bao.toByteArray();
+                writeFileOnInternalStorage(kspath, data);
+
+                System.out.println("Okay");
+                out.writeUTF("Keystore Received");
+
+                //String received = in.readUTF();
+                //System.out.println(received);
+
+                //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("clientTP.keystore", Context.MODE_PRIVATE));
+                //outputStreamWriter.write(received);
+                //outputStreamWriter.close();
+            }
 
             in.close();
             out.close();

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,10 +28,17 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CreateClient(username.getText().toString(), password.getText().toString(), "register",getApplicationContext()).execute();
-                Intent myIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                RegisterActivity.this.startActivity(myIntent);
-                finish();
+                CreateClient client = new CreateClient(username.getText().toString(), password.getText().toString(), "register",getApplicationContext());
+                client.execute();
+                while(client.getResult().equals("")) {
+                }
+                if(client.getResult().equals("Success")){
+                    Intent myIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                    RegisterActivity.this.startActivity(myIntent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), client.getResult(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
