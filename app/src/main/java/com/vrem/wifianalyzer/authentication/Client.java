@@ -1,6 +1,9 @@
 package com.vrem.wifianalyzer.authentication;
 
 import android.content.Context;
+import android.content.Intent;
+
+import com.vrem.wifianalyzer.MainActivity;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -27,8 +30,9 @@ public class Client {
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
+    private String result = "";
 
-    public Client(String address, int port, String username, String password, Context context) {
+    public Client(String address, int port, String username, String password, String type, Context context) {
         try {
 
             Security.addProvider(new BouncyCastleProvider());
@@ -66,8 +70,14 @@ public class Client {
             InputStream inputStream = socket.getInputStream();
             out = new DataOutputStream(socket.getOutputStream());
 
-            //out.writeUTF("login");
-            out.writeUTF("register");
+            out.writeUTF(type); //register or login
+
+            out.writeUTF(username);
+            out.writeUTF(password);
+
+            this.result = in.readUTF();
+            System.out.println(result);
+            System.out.println(in.readUTF());
 
             /*byte[] buff = new byte[8000];
             int bytesRead = (inputStream.read(buff));
@@ -98,11 +108,6 @@ public class Client {
             //outputStreamWriter.write(received);
             //outputStreamWriter.close();
 */
-            out.writeUTF(username);
-            out.writeUTF(password);
-
-            System.out.println(in.readUTF());
-            System.out.println(in.readUTF());
 
             in.close();
             out.close();
@@ -114,6 +119,11 @@ public class Client {
             System.out.println(e);
         }
     }
+
+    public String getResult() {
+        return this.result;
+    }
+
     public void writeFileOnInternalStorage(String path, byte[] data) throws IOException {
         File file = new File(path);
         if (!file.exists()) {
