@@ -39,10 +39,10 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Tor(getApplicationContext()).execute();
+        //new Tor(getApplicationContext()).execute();
 
-        //Intent intent = new Intent(this, AuthenticationActivity.class);
-        //startActivity(intent);
-        //finish();
+        Intent intent = new Intent(this, AuthenticationActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
